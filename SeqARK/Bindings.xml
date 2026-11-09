@@ -1,0 +1,4 @@
+<Bindings>
+	<!-- SeqARK binds its keys itself (window or /seqark bind); nothing is listed in the game's
+	     Key Bindings menu. The game looks for this file in every addon folder. -->
+</Bindings>
