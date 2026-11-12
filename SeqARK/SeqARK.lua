@@ -51,7 +51,7 @@ before /cast [known:{427453}] {255937}
 ]]
 
 local BUILTIN = {
-	ST = [[
+	RET_ST = [[
 SeqARK 1
 name ST
 title Retribution single target, Avenging Wrath and trinkets on steps
@@ -74,7 +74,7 @@ step /cast [nomod] {20271}
 step /cast [nomod] {184575}
 step /cast [nomod] {343527}
 ]],
-	AE = [[
+	RET_AE = [[
 SeqARK 1
 name AE
 title Retribution AoE (2+ targets), Avenging Wrath and trinkets on steps
@@ -95,7 +95,7 @@ step /cast [nomod] {343527}
 step /use [combat] 14
 step /cast [nomod] {53385}
 ]],
-	STNOCD = [[
+	RET_STNOCD = [[
 SeqARK 1
 name STNOCD
 title Retribution single target, Avenging Wrath and trinkets by hand
@@ -115,7 +115,7 @@ step /cast [nomod] {20271}
 step /cast [nomod] {184575}
 step /cast [nomod] {343527}
 ]],
-	AENOCD = [[
+	RET_AENOCD = [[
 SeqARK 1
 name AENOCD
 title Retribution AoE (2+ targets), Avenging Wrath and trinkets by hand
@@ -132,6 +132,230 @@ step /cast [nomod] {53385}
 step /cast [nomod] {255937}
 step /cast [nomod] {343527}
 step /cast [nomod] {53385}
+]],
+	-- Enhancement (Totemic) and Elemental (Stormbringer) Shaman: the step orders measured in SimC.
+	ENH_ST = [[
+SeqARK 1
+name ST
+title Enhancement single target, cooldowns and trinkets on steps
+spec 263
+icon {60103}
+before /targetenemy [noharm][dead]
+before /startattack
+step /cast [@player,nomod] {444995}
+step /cast [nomod] {17364}
+step /use [combat] 14
+step /cast [nomod] {470057}
+step /cast [nomod] {60103}
+step /cast [nomod] {187874}
+step /cast [@player,nomod] {444995}
+step /cast [nomod] {60103}
+step /cast [combat] {384352}
+step /cast [nomod] {60103}
+step /cast [nomod] {197214}
+step /cast [nomod] {17364}
+step /cast [@player,nomod] {444995}
+step /cast [nomod] {187874}
+step /cast [nomod] {197214}
+]],
+	ENH_AE = [[
+SeqARK 1
+name AE
+title Enhancement AoE (2+ targets), cooldowns and trinkets on steps
+spec 263
+icon {187874}
+before /targetenemy [noharm][dead]
+before /startattack
+step /cast [nomod] {470057}
+step /cast [nomod] {187874}
+step /cast [nomod] {17364}
+step /cast [nomod] {197214}
+step /cast [nomod] {188443}
+step /cast [nomod] {187874}
+step /cast [nomod] {470057}
+step /cast [nomod] {197214}
+step /cast [nomod] {60103}
+step /cast [@player,nomod] {444995}
+step /use [combat] 14
+step /cast [combat] {384352}
+step /cast [nomod] {60103}
+]],
+	ELE_ST = [[
+SeqARK 1
+name ST
+title Elemental single target, cooldowns and trinkets on steps
+spec 262
+icon {51505}
+before /targetenemy [noharm][dead]
+step /cast [nomod] {191634}
+step /cast [combat] {378081}
+step /cast [nomod] {51505}
+step /cast [nomod] {114050}
+step /cast [nomod] {51505}
+step /cast [nomod] {188196}
+step /cast [nomod] {470411}
+step /cast [nomod] {188196}
+step /cast [nomod] {114050}
+step /cast [nomod] {188196}
+step /cast [nomod] {117014}
+step /use [combat] 14
+step /cast [nomod] {188196}
+step /cast [nomod] {117014}
+]],
+	ELE_AE = [[
+SeqARK 1
+name AE
+title Elemental AoE (2+ targets), cooldowns and trinkets on steps
+spec 262
+icon {188443}
+before /targetenemy [noharm][dead]
+step /cast [nomod] {191634}
+step /cast [nomod] {114050}
+step /use [combat] 14
+step /cast [nomod] {188196}
+step /cast [nomod] {188443}
+step /cast [nomod] {117014}
+step /cast [nomod] {114050}
+step /cast [@cursor,nomod] {61882}
+step /cast [nomod] {114050}
+step /cast [nomod] {191634}
+step /cast [nomod] {188443}
+step /cast [nomod] {114050}
+step /cast [nomod] {51505}
+step /cast [combat] {378081}
+step /cast [nomod] {188443}
+]],
+	-- Havoc (Fel-Scarred) and Devourer (Annihilator) Demon Hunter: the step orders measured in SimC.
+	-- Havoc has one order only: the same order is the best on one target and on many. Devourer's
+	-- Collapsing Star goes out first whenever it is up (it replaces Void Metamorphosis while it is).
+	HAVOC_ST = [[
+SeqARK 1
+name ST
+title Havoc single target and AoE (one order for both), cooldowns and trinket on steps
+spec 577
+icon {162794}
+before /targetenemy [noharm][dead]
+before /startattack
+step /cast [nomod] {258860}
+step /cast [nomod] {198013}
+step /use [combat] 13
+step /cast [nomod] {258920}
+step /cast [nomod] {370965}
+step /cast [nomod] {370965}
+step /cast [nomod] {188499}
+step /cast [nomod] {198013}
+step /cast [@player,nomod] {191427}
+step /cast [nomod] {162794}
+step /cast [nomod] {188499}
+step /cast [nomod] {232893}
+step /cast [nomod] {258920}
+step /cast [nomod] {188499}
+step /cast [nomod] {162794}
+step /cast [nomod] {188499}
+]],
+	DEV_ST = [[
+SeqARK 1
+name ST
+title Devourer single target, cooldowns and trinket on steps
+spec 1480
+icon {1226019}
+before /targetenemy [noharm][dead]
+before /cast [known:{1221150}] {1217605}
+step /cast [nomod] {1226019}
+step /use [combat] 14
+step /cast [nomod] {473662}
+step /cast [nomod] {1245412}
+step /cast [nomod] {1226019}
+step /cast [nomod] {473662}
+step /cast [nomod] {1217605}
+]],
+	DEV_AE = [[
+SeqARK 1
+name AE
+title Devourer AoE (2+ targets), cooldowns and trinket on steps
+spec 1480
+icon {473728}
+before /targetenemy [noharm][dead]
+before /cast [known:{1221150}] {1217605}
+step /cast [nomod] {473662}
+step /cast [nomod] {473728}
+step /use [combat] 14
+step /cast [nomod] {473662}
+step /cast [nomod] {473662}
+step /cast [nomod] {473662}
+step /cast [nomod] {1245412}
+step /cast [nomod] {473662}
+step /cast [nomod] {473728}
+step /cast [nomod] {1226019}
+step /cast [nomod] {1217605}
+step /cast [nomod] {1245412}
+]],
+	-- Unholy (Rider of the Apocalypse) and Frost (Deathbringer) Death Knight: the step orders measured
+	-- in SimC. Frost has one order only: the same order is the best on one target and on many.
+	UH_ST = [[
+SeqARK 1
+name ST
+title Unholy single target (1-3 targets), cooldowns and trinket on steps
+spec 252
+icon {55090}
+before /targetenemy [noharm][dead]
+before /startattack
+step /cast [nomod] {1247378}
+step /cast [nomod] {42650}
+step /cast [nomod] {47541}
+step /use [combat] 14
+step /cast [nomod] {85948}
+step /cast [nomod] {42650}
+step /cast [nomod] {47541}
+step /cast [nomod] {85948}
+step /cast [nomod] {55090}
+step /cast [nomod] {1233448}
+step /cast [nomod] {42650}
+step /cast [nomod] {55090}
+step /cast [nomod] {343294}
+step /cast [nomod] {47541}
+step /cast [nomod] {343294}
+]],
+	UH_AE = [[
+SeqARK 1
+name AE
+title Unholy AoE (4+ targets), Epidemic, cooldowns and trinket on steps
+spec 252
+icon {207317}
+before /targetenemy [noharm][dead]
+before /startattack
+step /cast [nomod] {1233448}
+step /cast [nomod] {55090}
+step /cast [nomod] {1247378}
+step /use [combat] 14
+step /cast [nomod] {85948}
+step /cast [nomod] {343294}
+step /cast [nomod] {207317}
+step /cast [nomod] {42650}
+step /cast [nomod] {1233448}
+step /cast [nomod] {55090}
+]],
+	FROST_ST = [[
+SeqARK 1
+name ST
+title Frost single target and AoE (one order for both), cooldowns and trinket on steps
+spec 251
+icon {49020}
+before /targetenemy [noharm][dead]
+before /startattack
+step /cast [nomod] {47568}
+step /cast [nomod] {439843}
+step /cast [nomod] {47568}
+step /cast [nomod] {279302}
+step /cast [nomod] {49143}
+step /cast [combat] {1249658}
+step /cast [nomod] {439843}
+step /cast [nomod] {49184}
+step /cast [combat] {51271}
+step /cast [nomod] {439843}
+step /cast [nomod] {49020}
+step /use [combat] 14
+step /cast [nomod] {49020}
 ]],
 }
 local ORDER = { 'ST', 'AE', 'STNOCD', 'AENOCD' }
@@ -1211,7 +1435,9 @@ local function List()
 	local any = false
 	local spec = CurrentSpec()
 	local keys = spec and Keys(spec) or {}
+	local listed = {}
 	for _, name in ipairs(ORDER) do
+		listed[name] = true
 		local seq = info[name]
 		if seq then
 			any = true
@@ -1219,7 +1445,7 @@ local function List()
 		end
 	end
 	for name, seq in pairs(info) do
-		if not BUILTIN[name] then
+		if not listed[name] then
 			any = true
 			Print(name .. ': ' .. (seq.title or '') .. ' - ' .. #seq.steps .. (#seq.steps == 1 and ' step' or ' steps') .. ', key: ' .. (keys[name] or 'none'))
 		end

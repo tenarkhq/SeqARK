@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0
+
+- Built-in sequences for six more specializations, each order measured in SimC:
+  - Death Knight: Unholy ST (1-3 targets) and AE (4+ targets, with Epidemic); Frost one order for single target and AoE
+  - Demon Hunter: Havoc one order for single target and AoE; Devourer ST and AE (Collapsing Star goes out first whenever it is up)
+  - Shaman: Enhancement ST and AE; Elemental ST and AE
+- Havoc and Frost have one order only: the same order was the best on one target and on many, so there is no separate AE for them
+- The orders use trinket 14 only where the measured profile's trinket has a use effect; Surging Totem is placed at your feet, Earthquake at the mouse cursor
+
 ## 0.6.1
 
 - The window shows your sequences in two groups: IMPORTED and BUILT IN. A built-in sequence that an imported one of the same name replaces stays in the list, dimmed, marked "Not used"; its key is on the imported one. Delete the imported one and the built-in gets the key back
