@@ -2,7 +2,7 @@
 ## Title: SeqARK
 ## Notes: One-button sequences: each key press casts the next step. Test build.
 ## Author: Roland
-## Version: 0.5.2
+## Version: 0.6.0
 ## IconTexture: Interface\AddOns\SeqARK\Icon
 ## AddonCompartmentFunc: SeqARK_OnAddonCompartmentClick
 ## SavedVariables: SeqARKDB

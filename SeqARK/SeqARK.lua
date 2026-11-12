@@ -134,7 +134,109 @@ step /cast [nomod] {343527}
 step /cast [nomod] {53385}
 ]],
 }
-local ORDER = { 'ST', 'AE', 'STNOCD', 'AENOCD' }
+-- The Holy Power first variants. The game does not let a sequence see your Holy Power, so every
+-- press first tries the spender: with 3 or more it goes out, with less the macro moves on to the
+-- next line and the step's builder or cooldown goes out instead. So Holy Power is spent before a
+-- builder would overflow it (a measured +10 key wasted 37% of it at 5 Holy Power). The steps hold
+-- only builders, cooldowns and trinkets; the spender is in every step. The heal line is written
+-- without spaces so that every step stays under the game's 255 characters.
+local function RetHPBefore(spender)
+	return [[
+before /targetenemy [noharm][dead]
+before /startattack
+before /cast [mod:ctrl,@mouseover,dead,exists]{391054};[mod:ctrl,@mouseover,help,nodead][mod:ctrl]{85673}
+before /cast [known:{427453}]{255937}
+before /cast [nomod]{]] .. spender .. [[}
+]]
+end
+
+BUILTIN.STHP = [[
+SeqARK 1
+name STHP
+title Retribution single target, Holy Power spent first, Avenging Wrath and trinkets on steps
+spec 70
+icon {85256}
+]] .. RetHPBefore(85256) .. [[
+step /cast [nomod]{184575}
+step /cast [combat]{31884}
+step /cast [nomod]{343527}
+step /cast [nomod]{255937}
+step /cast [nomod]{20271}
+step /cast [nomod]{255937}
+step /use [combat] 13
+step /cast [nomod]{184575}
+step /cast [nomod]{255937}
+step /cast [nomod]{20271}
+step /cast [nomod]{375576}
+step /use [combat] 14
+step /cast [nomod]{184575}
+step /cast [nomod]{20271}
+step /cast [nomod]{343527}
+]]
+
+BUILTIN.AEHP = [[
+SeqARK 1
+name AEHP
+title Retribution AoE (2+ targets), Holy Power spent first, Avenging Wrath and trinkets on steps
+spec 70
+icon {53385}
+]] .. RetHPBefore(53385) .. [[
+step /cast [nomod]{255937}
+step /cast [nomod]{184575}
+step /cast [nomod]{20271}
+step /cast [combat]{31884}
+step /cast [nomod]{375576}
+step /cast [nomod]{184575}
+step /cast [nomod]{20271}
+step /use [combat] 13
+step /cast [nomod]{255937}
+step /cast [nomod]{184575}
+step /cast [nomod]{343527}
+step /use [combat] 14
+step /cast [nomod]{20271}
+]]
+
+BUILTIN.STHPNOCD = [[
+SeqARK 1
+name STHPNOCD
+title Retribution single target, Holy Power spent first, Avenging Wrath and trinkets by hand
+spec 70
+icon {85256}
+]] .. RetHPBefore(85256) .. [[
+step /cast [nomod]{184575}
+step /cast [nomod]{343527}
+step /cast [nomod]{255937}
+step /cast [nomod]{20271}
+step /cast [nomod]{255937}
+step /cast [nomod]{184575}
+step /cast [nomod]{255937}
+step /cast [nomod]{20271}
+step /cast [nomod]{375576}
+step /cast [nomod]{184575}
+step /cast [nomod]{20271}
+step /cast [nomod]{343527}
+]]
+
+BUILTIN.AEHPNOCD = [[
+SeqARK 1
+name AEHPNOCD
+title Retribution AoE (2+ targets), Holy Power spent first, Avenging Wrath and trinkets by hand
+spec 70
+icon {53385}
+]] .. RetHPBefore(53385) .. [[
+step /cast [nomod]{255937}
+step /cast [nomod]{184575}
+step /cast [nomod]{20271}
+step /cast [nomod]{375576}
+step /cast [nomod]{184575}
+step /cast [nomod]{20271}
+step /cast [nomod]{255937}
+step /cast [nomod]{184575}
+step /cast [nomod]{343527}
+step /cast [nomod]{20271}
+]]
+
+local ORDER = { 'ST', 'AE', 'STNOCD', 'AENOCD', 'STHP', 'AEHP', 'STHPNOCD', 'AEHPNOCD' }
 
 -- Reads a sequence text. Returns the sequence or nil and the reason.
 local function Parse(text)
