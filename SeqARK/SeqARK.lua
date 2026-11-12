@@ -134,109 +134,7 @@ step /cast [nomod] {343527}
 step /cast [nomod] {53385}
 ]],
 }
--- The Holy Power first variants. The game does not let a sequence see your Holy Power, so every
--- press first tries the spender: with 3 or more it goes out, with less the macro moves on to the
--- next line and the step's builder or cooldown goes out instead. So Holy Power is spent before a
--- builder would overflow it (a measured +10 key wasted 37% of it at 5 Holy Power). The steps hold
--- only builders, cooldowns and trinkets; the spender is in every step. The heal line is written
--- without spaces so that every step stays under the game's 255 characters.
-local function RetHPBefore(spender)
-	return [[
-before /targetenemy [noharm][dead]
-before /startattack
-before /cast [mod:ctrl,@mouseover,dead,exists]{391054};[mod:ctrl,@mouseover,help,nodead][mod:ctrl]{85673}
-before /cast [known:{427453}]{255937}
-before /cast [nomod]{]] .. spender .. [[}
-]]
-end
-
-BUILTIN.STHP = [[
-SeqARK 1
-name STHP
-title Retribution single target, Holy Power spent first, Avenging Wrath and trinkets on steps
-spec 70
-icon {85256}
-]] .. RetHPBefore(85256) .. [[
-step /cast [nomod]{184575}
-step /cast [combat]{31884}
-step /cast [nomod]{343527}
-step /cast [nomod]{255937}
-step /cast [nomod]{20271}
-step /cast [nomod]{255937}
-step /use [combat] 13
-step /cast [nomod]{184575}
-step /cast [nomod]{255937}
-step /cast [nomod]{20271}
-step /cast [nomod]{375576}
-step /use [combat] 14
-step /cast [nomod]{184575}
-step /cast [nomod]{20271}
-step /cast [nomod]{343527}
-]]
-
-BUILTIN.AEHP = [[
-SeqARK 1
-name AEHP
-title Retribution AoE (2+ targets), Holy Power spent first, Avenging Wrath and trinkets on steps
-spec 70
-icon {53385}
-]] .. RetHPBefore(53385) .. [[
-step /cast [nomod]{255937}
-step /cast [nomod]{184575}
-step /cast [nomod]{20271}
-step /cast [combat]{31884}
-step /cast [nomod]{375576}
-step /cast [nomod]{184575}
-step /cast [nomod]{20271}
-step /use [combat] 13
-step /cast [nomod]{255937}
-step /cast [nomod]{184575}
-step /cast [nomod]{343527}
-step /use [combat] 14
-step /cast [nomod]{20271}
-]]
-
-BUILTIN.STHPNOCD = [[
-SeqARK 1
-name STHPNOCD
-title Retribution single target, Holy Power spent first, Avenging Wrath and trinkets by hand
-spec 70
-icon {85256}
-]] .. RetHPBefore(85256) .. [[
-step /cast [nomod]{184575}
-step /cast [nomod]{343527}
-step /cast [nomod]{255937}
-step /cast [nomod]{20271}
-step /cast [nomod]{255937}
-step /cast [nomod]{184575}
-step /cast [nomod]{255937}
-step /cast [nomod]{20271}
-step /cast [nomod]{375576}
-step /cast [nomod]{184575}
-step /cast [nomod]{20271}
-step /cast [nomod]{343527}
-]]
-
-BUILTIN.AEHPNOCD = [[
-SeqARK 1
-name AEHPNOCD
-title Retribution AoE (2+ targets), Holy Power spent first, Avenging Wrath and trinkets by hand
-spec 70
-icon {53385}
-]] .. RetHPBefore(53385) .. [[
-step /cast [nomod]{255937}
-step /cast [nomod]{184575}
-step /cast [nomod]{20271}
-step /cast [nomod]{375576}
-step /cast [nomod]{184575}
-step /cast [nomod]{20271}
-step /cast [nomod]{255937}
-step /cast [nomod]{184575}
-step /cast [nomod]{343527}
-step /cast [nomod]{20271}
-]]
-
-local ORDER = { 'ST', 'AE', 'STNOCD', 'AENOCD', 'STHP', 'AEHP', 'STHPNOCD', 'AEHPNOCD' }
+local ORDER = { 'ST', 'AE', 'STNOCD', 'AENOCD' }
 
 -- Reads a sequence text. Returns the sequence or nil and the reason.
 local function Parse(text)
@@ -804,10 +702,11 @@ local rows, tree = {}, {}
 local selected -- the spec shown on the right
 local capturing -- { spec, name } of the key field waiting for a key
 local notice -- a one-off message in place of the hint line
-local SIDE = 190 -- width of the Class / Spec list
+local SIDE = 240 -- width of the Class / Spec list
 local LEFT = SIDE + 16 -- left edge of the sequence list
-local ROW_H, ROW_GAP, FIRST_ROW = 44, 3, -96
-local COL_STEPS, COL_SOURCE, COL_KEY = 206, 254, 366
+local ROW_H, ROW_GAP, FIRST_ROW = 58, 3, -100
+local COL_STEPS, COL_SOURCE, COL_KEY = 365, 420, 575
+local SECTION_H = 26 -- the IMPORTED / BUILT IN line above each group
 local IGNORED = {
 	LSHIFT = true, RSHIFT = true, LCTRL = true, RCTRL = true, LALT = true, RALT = true,
 	LMETA = true, RMETA = true, UNKNOWN = true, PRINTSCREEN = true,
@@ -980,14 +879,18 @@ local function NewRow(i)
 	row.title = Text(row, 12, C.soft)
 	row.title:SetPoint('TOPLEFT', 10, -26)
 	row.title:SetWidth(COL_STEPS - 18)
+	-- A long title wraps to a second line instead of being cut off.
+	row.title:SetWordWrap(true)
+	row.title:SetMaxLines(2)
+	row.title:SetJustifyV('TOP')
 	row.steps = Text(row, 15, C.text)
 	row.steps:SetPoint('LEFT', COL_STEPS, 0)
 	row.source = Text(row, 13, C.soft)
 	row.replaces = Text(row, 11, C.soft)
 	row.replaces:SetPoint('TOPLEFT', row.source, 'BOTTOMLEFT', 0, -2)
-	row.replaces:SetText('replaces the built-in one')
+	row.replaces:SetWidth(COL_KEY - COL_SOURCE - 8)
 	local field = CreateFrame('Button', nil, row)
-	field:SetSize(120, 26)
+	field:SetSize(118, 26)
 	field:SetPoint('LEFT', COL_KEY, 0)
 	field:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 	Fill(field, C.field)
@@ -1024,6 +927,41 @@ local function NewRow(i)
 	return row
 end
 
+-- The IMPORTED and BUILT IN lines above the two groups.
+local sections = {}
+local function Section(i, label, note, y)
+	local sec = sections[i]
+	if not sec then
+		sec = CreateFrame('Frame', nil, main)
+		sec:SetHeight(SECTION_H)
+		sec.label = Text(sec, 12, C.gold)
+		sec.label:SetPoint('BOTTOMLEFT', 2, 5)
+		sec.note = Text(sec, 12, C.soft)
+		sec.note:SetPoint('LEFT', sec.label, 'RIGHT', 10, 0)
+		sections[i] = sec
+	end
+	sec:ClearAllPoints()
+	sec:SetPoint('TOPLEFT', LEFT, y)
+	sec:SetPoint('TOPRIGHT', -15, y)
+	sec.label:SetText(label)
+	sec.note:SetText(note)
+	sec:Show()
+end
+
+-- The built-in sequences of a spec, read once.
+local builtinBySpec
+local function Builtins(spec)
+	if not builtinBySpec then
+		builtinBySpec = {}
+		for _, text in pairs(BUILTIN) do
+			local seq = Parse(text)
+			builtinBySpec[seq.spec] = builtinBySpec[seq.spec] or {}
+			table.insert(builtinBySpec[seq.spec], { seq = seq, text = text })
+		end
+	end
+	return builtinBySpec[spec] or {}
+end
+
 function Refresh()
 	if not main or not main:IsShown() then return end
 	local all = All()
@@ -1043,37 +981,65 @@ function Refresh()
 	main.spec:SetText(specName and (className .. ' - ' .. specName) or 'No specialization')
 	local own = spec ~= nil and OwnClass(spec)
 	local keys = own and Keys(spec) or {}
-	local entries = {}
+	-- Two groups: what you imported, and what comes with SeqARK. A built-in sequence that an
+	-- imported one of the same name replaces is still listed, dimmed, as not used.
+	local imported, builtin = {}, {}
 	for _, entry in pairs(all) do
-		if entry.seq.spec == spec then entries[#entries + 1] = entry end
+		if entry.seq.spec == spec and entry.imported then imported[#imported + 1] = entry end
+	end
+	for _, entry in ipairs(spec and Builtins(spec) or {}) do
+		local live = all[Key(spec, entry.seq.name)]
+		builtin[#builtin + 1] = { seq = entry.seq, text = entry.text, replaced = live ~= nil and live.imported == true }
 	end
 	local rank = {}
 	for i, name in ipairs(ORDER) do rank[name] = i end
-	table.sort(entries, function(a, b)
+	local function Sort(a, b)
 		local ra, rb = rank[a.seq.name] or 99, rank[b.seq.name] or 99
 		if ra ~= rb then return ra < rb end
 		return a.seq.name < b.seq.name
-	end)
+	end
+	table.sort(imported, Sort)
+	table.sort(builtin, Sort)
 
-	local y = FIRST_ROW
-	for i, entry in ipairs(entries) do
-		local row = rows[i] or NewRow(i)
+	local y, n, nsec = FIRST_ROW, 0, 0
+	local function Draw(entry)
+		n = n + 1
+		local row = rows[n] or NewRow(n)
 		local seq = entry.seq
 		row.entry = entry
 		row:ClearAllPoints()
 		row:SetPoint('TOPLEFT', LEFT, y)
 		row:SetPoint('TOPRIGHT', -15, y)
+		row:SetAlpha(entry.replaced and 0.5 or 1)
 		row.name:SetText(seq.name)
 		row.title:SetText(seq.title or '')
 		row.steps:SetText(#seq.steps)
-		local color = entry.imported and C.gold or C.soft
-		row.source:SetText(entry.imported and 'Imported' or 'Built in')
+		local source, color, note
+		if entry.imported then
+			source, color = 'Imported', C.gold
+			note = entry.replaces and ('used in place of the built-in ' .. seq.name) or nil
+		elseif entry.replaced then
+			source, color = 'Not used', C.soft
+			note = 'your imported ' .. seq.name .. ' runs instead'
+		else
+			source, color = 'Built in', C.soft
+		end
+		row.source:SetText(source)
 		row.source:SetTextColor(color[1], color[2], color[3])
 		row.source:ClearAllPoints()
-		row.source:SetPoint('LEFT', COL_SOURCE, entry.replaces and 6 or 0)
-		row.replaces:SetShown(entry.replaces == true)
-		ShowKey(row.key, keys[seq.name], Waiting(seq.spec, seq.name), own)
+		row.source:SetPoint('LEFT', COL_SOURCE, note and 7 or 0)
+		row.replaces:SetText(note or '')
+		row.replaces:SetShown(note ~= nil)
+		if entry.replaced then
+			row.key:SetEnabled(false)
+			row.key.edge:Color(C.outer)
+			row.key.label:SetTextColor(C.soft[1], C.soft[2], C.soft[3])
+			row.key.label:SetText('key on the imported')
+		else
+			ShowKey(row.key, keys[seq.name], Waiting(seq.spec, seq.name), own)
+		end
 		row.delete:SetShown(entry.imported == true)
+		row.icon:SetShown(not entry.replaced)
 		row.export:ClearAllPoints()
 		if entry.imported then
 			row.export:SetPoint('RIGHT', row.delete, 'LEFT', -6, 0)
@@ -1083,9 +1049,23 @@ function Refresh()
 		row:Show()
 		y = y - ROW_H - ROW_GAP
 	end
-	for i = #entries + 1, #rows do rows[i]:Hide() end
-	main.empty:SetShown(#entries == 0)
-	if #entries == 0 then y = y - 40 end
+	if #imported > 0 then
+		nsec = nsec + 1
+		Section(nsec, 'IMPORTED', 'your own sequences; one with a built-in name is used in place of it', y)
+		y = y - SECTION_H
+		for _, entry in ipairs(imported) do Draw(entry) end
+		y = y - 8
+	end
+	if #builtin > 0 then
+		nsec = nsec + 1
+		Section(nsec, 'BUILT IN', 'come with SeqARK', y)
+		y = y - SECTION_H
+		for _, entry in ipairs(builtin) do Draw(entry) end
+	end
+	for i = nsec + 1, #sections do sections[i]:Hide() end
+	for i = n + 1, #rows do rows[i]:Hide() end
+	main.empty:SetShown(n == 0)
+	if n == 0 then y = y - 40 end
 	local listHeight = -y - ROW_GAP + 52
 	local treeHeight = -treeBottom + 70 -- room for the note under the list
 	main:SetHeight(math.max(listHeight, treeHeight, 300))
@@ -1117,7 +1097,7 @@ end
 
 local function OpenMain()
 	if not main then
-		main = Panel('SeqARKMain', 900, 300)
+		main = Panel('SeqARKMain', 1160, 300)
 		main.title:SetText('SeqARK')
 		local side = main:CreateTexture(nil, 'BACKGROUND', nil, 1)
 		side:SetPoint('TOPLEFT', 1, -36)

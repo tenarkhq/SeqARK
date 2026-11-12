@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+- The window shows your sequences in two groups: IMPORTED and BUILT IN. A built-in sequence that an imported one of the same name replaces stays in the list, dimmed, marked "Not used"; its key is on the imported one. Delete the imported one and the built-in gets the key back
+- Wider window and columns: long titles wrap to a second line instead of being cut off, and the source text no longer runs into the key field
+- STHP, AEHP, STHPNOCD and AEHPNOCD from 0.6.0 are removed. The game tries only the first matching cast line of a press, so with too little Holy Power the spender line failed and the builder behind it never went out. A key bound to them does nothing until you bind it again
+
 ## 0.6.0
 
 - Four new built-in Retribution sequences beside the old ones: STHP, AEHP, STHPNOCD and AEHPNOCD. Every press tries the spender first (Final Verdict in single target, Divine Storm in AoE): with 3 or more Holy Power it goes out, with less the step's builder or cooldown goes out instead. So Holy Power is spent before a builder would waste it at 5. The steps hold builders, cooldowns and trinkets only
