@@ -80,3 +80,7 @@ A step with its `before` lines and the spell names filled in can be at most 255 
 - Every press moves on one step, whether that step's spell went out or not
 - In combat keys cannot be set, and sequences cannot be imported or deleted
 - SeqARK keeps its keys itself and sets them at every login; the game's own key bindings are not changed
+
+## License
+
+The code is under the MIT License. The SeqARK logo and icon (`SeqARK/Icon.tga`) are not covered by it.
