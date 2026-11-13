@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0
+
+- The built-in sequences of Death Knight, Demon Hunter and Shaman are measured again on the talent builds the top Mythic+ players use, and replaced:
+  - Death Knight: Unholy (San'layn) ST for 1-2 targets and AE for 3+ targets; Frost (Deathbringer) ST for 1-2 targets with Obliterate, and a new AE for 3+ targets with Frostscythe and Glacial Advance
+  - Demon Hunter: Havoc (Aldrachi Reaver) one order for single target and AoE, Reaver's Glaive goes out first whenever it is up; Devourer (Annihilator) one order for single target and AoE, and it waits while Void Ray channels, so a key press cannot cut the channel short
+  - Shaman: Enhancement (Stormbringer) ST for 1-2 targets and AE for 3+ targets; Elemental (Farseer) ST for one target and AE for 2+ targets, Earthquake at the mouse cursor
+- Devourer has no separate AE any more: one order was the best on one target and on many. A key bound to the old Devourer AE does nothing until you bind ST or another sequence to it
+- Shaman sequences use Voltaic Blaze, Ascendance and Ancestral Swiftness, the buttons of those builds; with other talents some steps do nothing
+
 ## 0.7.0
 
 - Built-in sequences for six more specializations, each order measured in SimC:
